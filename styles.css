@@ -1,0 +1,422 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .container {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  /* ================================
+     左侧面板 (图形库)
+     ================================ */
+  .left-panel {
+    width: 220px;
+    background-color: #eed6d6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    z-index: 10; 
+  }
+  .left-panel h2 {
+    margin-bottom: 20px;
+    color: #007BFF;
+    font-weight: 500;
+    font-size: 24px;
+  }
+  .shape-library {
+    display: grid;
+    grid-template-columns: repeat(2, 80px);
+    grid-gap: 15px;
+    justify-content: center;
+  }
+  .shape-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+  }
+  .shape-item:active {
+    cursor: grabbing;
+  }
+  .shape-item svg {
+    width: 60px;
+    height: 60px;
+  }
+  .shape-label {
+    position: absolute;
+    bottom: 5px;
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    width: 100%;
+  }
+  .shape-item.highlighted {
+    border: 2px solid #007BFF;
+    box-shadow: 0 0 10px rgba(0,123,255,0.5);
+  }
+
+  /* ================================
+     中间画布
+     ================================ */
+  .center-panel {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+    z-index: 2; 
+  }
+  .canvas-container {
+    flex-grow: 1;
+    position: relative;
+    border-top: 1px solid #e0e0e0;
+    z-index: 9999;
+  }
+  .canvas-container svg {
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at center, #d0d0d0 1px, transparent 1px);
+    background-size: 20px 20px;
+    cursor: crosshair;
+  }
+
+  /* 工具栏 */
+  .toolbar {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    z-index: 10;
+    pointer-events: none; /* 允许点击穿透 */
+  }
+  .toolbar input[type="color"] {
+    border: none;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    pointer-events: all; /* 允许点击 */
+  }
+  .toolbar button {
+    background-color: #007BFF;
+    border: none;
+    color: #fff;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 20px;
+    line-height: 40px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all; /* 允许点击 */
+  }
+  .toolbar button:hover {
+    background-color: #0056b3;
+  }
+  .toolbar button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  /* ================================
+     右侧对话面板
+     ================================ */
+  .right-panel {
+    width: 350px;
+    background-color: #fff;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    pointer-events: auto;
+    z-index: 10;
+  }
+  .right-panel h3 {
+    margin-top: 0;
+    color: #007BFF;
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .chat-input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .chat-input-area input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  .chat-input-area button {
+    background-color: #007BFF;
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  .chat-input-area button:hover {
+    background-color: #0056b3;
+  }
+  .chat-response {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    height: 80vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    pointer-events: auto; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    position: relative;
+    word-wrap: break-word;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.3s forwards, slideIn 0.3s forwards;
+  }
+  .message.user {
+    background-color: #007BFF;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+  }
+  .message.assistant {
+    background-color: #e4e6eb;
+    color: #000;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+  }
+  .message::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+  }
+  .message.user::after {
+    right: -10px;
+    border-width: 10px 0 0 10px;
+    border-color: transparent transparent transparent #007BFF;
+  }
+  .message.assistant::after {
+    left: -10px;
+    border-width: 10px 10px 0 0;
+    border-color: transparent #e4e6eb transparent transparent;
+  }
+
+  /* 动画定义 */
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slideIn {
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* ================================
+     选择框与锚点
+     ================================ */
+  .selection-box {
+    fill: rgba(0, 123, 255, 0.1);
+    stroke: #007BFF;
+    stroke-width: 1;
+    stroke-dasharray: 4;
+    pointer-events: none;
+  }
+  .anchor {
+    fill: #fff;
+    stroke: #007BFF;
+    stroke-width: 2;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,123,255,0.5);
+  }
+  .rotate-handle {
+    fill: #007BFF;
+    cursor: pointer;
+    stroke: #fff;
+    stroke-width: 2;
+  }
+  .control-point {
+    fill: #FF5722;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: pointer;
+  }
+
+  /* 高光效果 */
+  .highlighted {
+    stroke: #007BFF;
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 8px #007BFF);
+  }
+
+  /* Flow Highlight 高光效果 */
+  .flow-highlighted {
+    stroke: #FF0000; /* 红色 */
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 10px #FF0000);
+  }
+
+  /* 属性栏 */
+  .properties-panel {
+    background-color: #fff;
+    border-top: 1px solid #e0e0e0;
+    padding: 20px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+    overflow-y: auto;
+    height: 200px;
+  }
+  .properties-panel h3 {
+    margin-top: 0;
+    color: #007BFF;
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .properties-panel label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 14px;
+  }
+  .properties-panel input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .properties-panel button {
+    background-color: #28A745;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 16px;
+    transition: background-color 0.2s;
+  }
+  .properties-panel button:hover {
+    background-color: #218838;
+  }
+  .properties-panel p {
+    color: #666;
+    font-size: 14px;
+  }
+  .editable-text {
+    font-size: 24px;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    user-select: none;
+  }
+  .polyline-control-point {
+    fill: #FF5722;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: pointer;
+  }
+  .flow-highlight {
+    stroke: url(#flow-gradient); 
+    stroke-width: 4;
+  }
+  .highlight-node {
+    filter: drop-shadow(0 0 8px #FFB3E6); 
+  }
+  .marquee {
+    fill: rgba(0,123,255,0.1);
+    stroke: #007BFF;
+    stroke-width: 1;
+    stroke-dasharray: 4;
+    pointer-events: none;
+  }
+  /* 流动动画样式 */
+  .flow-circle {
+    fill: #FF0000;
+    stroke: none;
+    r: 5;
+  }
+  .flow-arrow {
+    fill: #FFC107;
+    stroke: none;
+  }
+
+  /* ================================
+     下载按钮样式
+     ================================ */
+  .toolbar .download-button {
+    background-color: #17A2B8;
+    position: relative;
+  }
+  .toolbar .download-button:hover {
+    background-color: #117a8b;
+  }
+  .toolbar .download-dropdown {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 20;
+    min-width: 120px;
+  }
+  .toolbar .download-dropdown button {
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .toolbar .download-dropdown button:hover {
+    background-color: #f1f1f1;
+  }
+  .toolbar .download-button.active .download-dropdown {
+    display: block;
+  }

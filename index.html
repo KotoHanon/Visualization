@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>图形绘制与拖拽 + Deepseek 交互</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- 左侧图形库 -->
+    <div class="left-panel">
+      <h2>图形库</h2>
+      <div class="shape-library">
+        <!-- 图形项... -->
+      </div>
+    </div>
+
+    <!-- 中间画布 -->
+    <div class="center-panel">
+      <div class="canvas-container">
+        <svg id="svg-canvas"></svg>
+        <div class="toolbar">
+          <!-- 工具栏按钮... -->
+        </div>
+      </div>
+      <div id="properties-panel" class="properties-panel" style="display: none;"></div>
+    </div>
+
+    <!-- 右侧对话面板 -->
+    <div class="right-panel">
+      <h3>Deepseek 大模型交互</h3>
+      <div class="chat-input-area">
+        <input type="text" id="user-prompt" placeholder="请输入指令，如『将选中的图形放大两倍』" />
+        <button id="send-prompt">发送</button>
+      </div>
+      <div id="chat-response" class="chat-response"></div>
+    </div>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="scripts/utils.js"></script>
+  <script src="scripts/svg-utils.js"></script>
+  <script src="scripts/deepseek.js"></script>
+  <script src="scripts/events.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>
